@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry 🥺</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Floating elements */
+        .floating-emojis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatup linear infinite;
+            opacity: 0.6;
+            will-change: transform;
+        }
+
+        @keyframes floatup {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-20vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Card Container */
+        .card {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            z-index: 10;
+            transform: scale(0.8);
+            opacity: 0;
+            animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .main-emoji {
+            font-size: 6rem;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: pulse 2.5s infinite;
+            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            color: #d1005b;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+        }
+
+        p {
+            color: #4a4e69;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            min-height: 55px;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-family: inherit;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+            z-index: 2;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.6);
+        }
+
+        .btn-yes:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .btn-no {
+            background: rgba(255, 255, 255, 0.8);
+            color: #ff4d6d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            /* important for JS trick */
+            z-index: 3;
+        }
+
+        /* Success screen */
+        .success-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .show-success {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hide-original {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="floating-emojis" id="bg-emojis"></div>
+
+    <div class="card">
+        <div id="original-content">
+            <div class="main-emoji" id="main-emoji">🥺</div>
+            <h1>I'm so sorry!</h1>
+            <p>Yen nadidru naditu… but naanu adanna hold madkond irbeku antha illa. Namma bond nanige tumba important…
+                let’s just go ahead and make it more beautiful and make our dreams come true!!👉👈💕
+            </p>
+            <div class="buttons">
+                <button class="btn-yes" id="btn-yes">Let’s move forward ❤️</button>
+                <button class="btn-no" id="btn-no">No</button>
+            </div>
+        </div>
+
+        <div id="success-content" class="success-content">
+            <div class="main-emoji" style="animation: none; transform: scale(1.2);">🥹</div>
+            <h1>Yay! Thank you! 🎉</h1>
+            <p>I love you so much Bujji! You're the absolute best, and I promise to keep Your heart! ❤️✨</p>
+        </div>
+    </div>
+
+    <!-- Confetti Script -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Generate initial floating emojis
+        const sadEmojis = ['🥺', '😭', '💔', '🩹', '🌸', '✨', '😢', '🎀', '🙏'];
+        const container = document.getElementById('bg-emojis');
+
+        function populateEmojis(emojiSet) {
+            container.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                let el = document.createElement('div');
+                el.className = 'emoji';
+                el.innerText = emojiSet[Math.floor(Math.random() * emojiSet.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (Math.random() * 8 + 6) + 's'; // 6s to 14s
+                el.style.animationDelay = (Math.random() * 5) + 's';
+
+                // Add varied sizing
+                const scale = Math.random() * 0.8 + 0.5; // 0.5 to 1.3
+                el.style.filter = `blur(${Math.random() * 2}px)`;
+                container.appendChild(el);
+            }
+        }
+
+        populateEmojis(sadEmojis);
+
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+        const originalContent = document.getElementById('original-content');
+        const successContent = document.getElementById('success-content');
+        const mainEmoji = document.getElementById('main-emoji');
+
+        const extraSadEmojis = ['😭', '💔', '😢', '😿', '🥺', '😫'];
+
+        // Trick: Make the "No" button run away when hovered
+        btnNo.addEventListener('mouseover', () => {
+            // Pick a random sad face
+            mainEmoji.innerText = extraSadEmojis[Math.floor(Math.random() * extraSadEmojis.length)];
+
+            // Fast pulse animation to show panic
+            mainEmoji.style.animationDuration = '0.5s';
+
+            // Calculate new position avoiding edges
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+
+            // Generate a random position
+            const randomX = Math.random() * (viewportWidth - btnWidth - 40) + 20;
+            const randomY = Math.random() * (viewportHeight - btnHeight - 40) + 20;
+
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        });
+
+        // Click on "Yes"
+        btnYes.addEventListener('click', () => {
+            originalContent.classList.add('hide-original');
+            successContent.classList.add('show-success');
+
+            // Re-populate floating with happy emojis
+            const happyEmojis = ['🥰', '😍', '❤️', '💕', '✨', '🎉', '💖', '💐'];
+            populateEmojis(happyEmojis);
+
+            // Fire epic confetti
+            var duration = 4 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function () {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // since particles fall down, start a bit higher than random
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                }));
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+        });
+    </script>
+</body>
+
+</html>
